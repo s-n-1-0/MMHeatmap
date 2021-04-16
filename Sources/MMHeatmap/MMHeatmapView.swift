@@ -34,16 +34,17 @@ public struct MMHeatmapView: View {
                 Text(style.week[3]).font(.footnote)
                 Spacer()
                 Text(style.week[6]).font(.footnote).foregroundColor(Color(UIColor.systemBlue))
-            }
+            }.frame(height: 10*7 + 2*6)
             ForEach( MM ..< (MM + range)){
                 i in
                 VStack{
                     Text("\(i)").font(.footnote)
                 MMHeatmapMMView(yyyy: yyyy, startMM: MM, MM: i,data:data, maxValue: maxValue)
                 }
-                if(i != (MM + range - 1)){ Divider() }
+                if(i != (MM + range - 1)){
+                    Divider().frame(height: 10*7 + 2*6).offset(x:0,y:-5) }
             }
-        }.frame(height: 10*7 + 2*6,alignment:.bottom).environmentObject(style)
+        }.frame(alignment:.bottom).environmentObject(style)
     }
 }
 struct MMHeatmap_Previews: PreviewProvider {
