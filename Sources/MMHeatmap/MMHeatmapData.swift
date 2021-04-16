@@ -7,17 +7,17 @@
 //
 import SwiftUI
 public struct MMHeatmapData {
-    var elapsedDay:Int
-    var value:Int
+   public var elapsedDay:Int
+   public var value:Int
 }
 
 public class MMHeatmapStyle:ObservableObject{
-    init(baseCellColor:UIColor,minCellColor:UIColor = UIColor.secondarySystemBackground,week:[String] = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"]) {
+    public init(baseCellColor:UIColor,minCellColor:UIColor = UIColor.secondarySystemBackground,week:[String] = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"]) {
         self.minCellColor = minCellColor
         self.baseCellColor = baseCellColor
         self.week = week
     }
-    @Published var minCellColor:UIColor
-    @Published var baseCellColor:UIColor
-    let week:[String]
+    @Published public var minCellColor:UIColor
+    @Published public var baseCellColor:UIColor
+   public let week:[String]
 }
