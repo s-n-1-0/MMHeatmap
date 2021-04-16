@@ -9,7 +9,7 @@
 import SwiftUI
 
 public struct MMHeatmapView: View {
-    init(yyyy:Int,MM:Int,data:[MMHeatmapData],range:Int,style:MMHeatmapStyle = MMHeatmapStyle(baseCellColor: UIColor.systemOrange)) {
+    init(yyyy:Int,MM:Int,data:[MMHeatmapData],range:Int,style:MMHeatmapStyle = MMHeatmapStyle(baseCellColor: UIColor.label)) {
         self.yyyy = yyyy
         self.MM = MM
         self.data = data
@@ -35,19 +35,19 @@ public struct MMHeatmapView: View {
                 Spacer()
                 Text(style.week[6]).font(.footnote).foregroundColor(Color(UIColor.systemBlue))
             }
-            ForEach((MM - range + 1) ..< MM + 1){
+            ForEach( MM ..< (MM + range)){
                 i in
                 VStack{
                     Text("\(i)").font(.footnote)
-                MMHeatmapMMView(yyyy: yyyy, startMM: MM - range + 1, MM: i,data:data, maxValue: maxValue)
+                MMHeatmapMMView(yyyy: yyyy, startMM: MM, MM: i,data:data, maxValue: maxValue)
                 }
-                if(i != MM){ Divider() }
+                if(i != (MM + range - 1)){ Divider() }
             }
         }.frame(height: 10*7 + 2*6,alignment:.bottom).environmentObject(style)
     }
 }
 struct MMHeatmap_Previews: PreviewProvider {
     static var previews: some View {
-        MMHeatmapView(yyyy: 2021,MM:4, data: [MMHeatmapData(elapsedDay: 73, value: 10)], range: 3)
+        MMHeatmapView(yyyy: 2021,MM:4, data: [MMHeatmapData(elapsedDay: 15, value: 10)], range: 3,style: MMHeatmapStyle(baseCellColor: UIColor.systemIndigo))
     }
 }
