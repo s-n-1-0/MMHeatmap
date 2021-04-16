@@ -8,4 +8,9 @@ final class MMHeatmapTests: XCTestCase {
         XCTAssertEqual(MMHeatmapStyle(baseCellColor: UIColor.black).minCellColor,UIColor.secondarySystemBackground)
         XCTAssertEqual(MMHeatmapStyle(baseCellColor: UIColor.black).baseCellColor, UIColor.black)
     }
+    func testHeatmapDataAttributeAccess(){
+        let d = MMHeatmapData(elapsedDay: 0, value: 10)
+        XCTAssertEqual(d.elapsedDay,0)
+        XCTAssertEqual(d.value,10)
+    }
 }

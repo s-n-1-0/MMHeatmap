@@ -9,7 +9,7 @@
 import SwiftUI
 
 public struct MMHeatmapView: View {
-    init(yyyy:Int,MM:Int,data:[MMHeatmapData],range:Int,style:MMHeatmapStyle = MMHeatmapStyle(baseCellColor: UIColor.label)) {
+   public init(yyyy:Int,MM:Int,data:[MMHeatmapData],range:Int,style:MMHeatmapStyle = MMHeatmapStyle(baseCellColor: UIColor.label)) {
         self.yyyy = yyyy
         self.MM = MM
         self.data = data

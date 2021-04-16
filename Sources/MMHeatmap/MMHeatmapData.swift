@@ -7,6 +7,10 @@
 //
 import SwiftUI
 public struct MMHeatmapData {
+    public init (elapsedDay:Int,value:Int){
+        self.elapsedDay = elapsedDay
+        self.value = value
+    }
    public var elapsedDay:Int
    public var value:Int
 }
