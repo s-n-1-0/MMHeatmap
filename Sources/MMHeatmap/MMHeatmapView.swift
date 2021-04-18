@@ -10,6 +10,9 @@ import SwiftUI
 
 public struct MMHeatmapView: View {
    public init(yyyy:Int,MM:Int,data:[MMHeatmapData],range:Int,style:MMHeatmapStyle = MMHeatmapStyle(baseCellColor: UIColor.label)) {
+        let formatter = DateFormatter()
+        formatter.dateFormat = style.dateMMFormat
+        self.displayFormatter = formatter
         self.yyyy = yyyy
         self.MM = MM
         self.data = data
@@ -21,6 +24,8 @@ public struct MMHeatmapView: View {
         self.style = style
     }
     @ObservedObject var style:MMHeatmapStyle
+    let calendar = Calendar( identifier: .gregorian)
+    let displayFormatter:DateFormatter
     let yyyy:Int
     let MM:Int
     let data:[MMHeatmapData]
@@ -38,13 +43,24 @@ public struct MMHeatmapView: View {
             ForEach( MM ..< (MM + range)){
                 i in
                 VStack{
-                    Text("\(i)").font(.footnote)
+                    Text(GetMMTitle(MM: i)).font(.footnote)
                 MMHeatmapMMView(yyyy: yyyy, startMM: MM, MM: i,data:data, maxValue: maxValue)
                 }
                 if(i != (MM + range - 1)){
                     Divider().frame(height: 10*7 + 2*6).offset(x:0,y:-5) }
             }
         }.frame(alignment:.bottom).environmentObject(style)
+    }
+    func GetMMTitle(MM:Int)->String{
+        var comp = DateComponents()
+        comp.year = yyyy
+        comp.day = 1
+        comp.month = MM
+        if let date = calendar.date(from: comp){
+           return displayFormatter.string(from: date)
+        }else{
+            return "\(MM)"
+        }
     }
 }
 struct MMHeatmap_Previews: PreviewProvider {

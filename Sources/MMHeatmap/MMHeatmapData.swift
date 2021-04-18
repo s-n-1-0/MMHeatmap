@@ -16,12 +16,14 @@ public struct MMHeatmapData {
 }
 
 public class MMHeatmapStyle:ObservableObject{
-    public init(baseCellColor:UIColor,minCellColor:UIColor = UIColor.secondarySystemBackground,week:[String] = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"]) {
+    public init(baseCellColor:UIColor,minCellColor:UIColor = UIColor.secondarySystemBackground,week:[String] = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],dateMMFormat:String = "MMM") {
         self.minCellColor = minCellColor
         self.baseCellColor = baseCellColor
         self.week = week
+        self.dateMMFormat = dateMMFormat
     }
     @Published public var minCellColor:UIColor
     @Published public var baseCellColor:UIColor
    public let week:[String]
+    public let dateMMFormat:String
 }
