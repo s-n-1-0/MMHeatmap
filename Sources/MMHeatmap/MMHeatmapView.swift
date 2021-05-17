@@ -9,7 +9,7 @@
 import SwiftUI
 
 public struct MMHeatmapView: View {
-   public init(yyyy:Int,MM:Int,data:[MMHeatmapData],range:Int,style:MMHeatmapStyle = MMHeatmapStyle(baseCellColor: UIColor.label)) {
+    public init(yyyy:Int,MM:Int,data:[MMHeatmapData],range:Int,style:MMHeatmapStyle = MMHeatmapStyle(baseCellColor: UIColor.label),maxElapsedDay:Int? = nil) {
         let formatter = DateFormatter()
         formatter.dateFormat = style.dateMMFormat
         self.displayFormatter = formatter
@@ -17,6 +17,7 @@ public struct MMHeatmapView: View {
         self.MM = MM
         self.data = data
         self.range = range
+        self.maxElapsedDay = maxElapsedDay
         self.maxValue = data.max(by:{
             (a, b) -> Bool in
             a.value < b.value
@@ -31,6 +32,7 @@ public struct MMHeatmapView: View {
     let data:[MMHeatmapData]
     let range:Int
     let maxValue:Int
+    let maxElapsedDay:Int?
     public var body: some View {
         HStack(alignment:.bottom){
             VStack{
@@ -44,7 +46,7 @@ public struct MMHeatmapView: View {
                 i in
                 VStack{
                     Text(GetMMTitle(MM: i)).font(.footnote)
-                MMHeatmapMMView(yyyy: yyyy, startMM: MM, MM: i,data:data, maxValue: maxValue)
+                    MMHeatmapMMView(yyyy: yyyy, startMM: MM, MM: i,data:data, maxValue: maxValue,maxElapsedDay:maxElapsedDay)
                 }
                 if(i != (MM + range - 1)){
                     Divider().frame(height: 10*7 + 2*6).offset(x:0,y:-5) }
