@@ -6,7 +6,26 @@
 //  Copyright © 2021 s-n-1-0. All rights reserved.
 //
 import SwiftUI
+
+/**
+ Input data
+ */
 public struct MMHeatmapData {
+    public init(year:Int,month:Int,day:Int,value:Int){
+        self.year = year
+        self.month = month
+        self.day = day
+        self.date = Calendar(identifier: .gregorian).date(from: DateComponents(year:year,month: month,day: day))!
+        self.value = value
+    }
+    let year:Int
+    let month:Int
+    let day:Int
+    let date:Date
+    
+    public var value:Int
+}
+public struct MMHeatmapElapsedData{
     public init (elapsedDay:Int,value:Int){
         self.elapsedDay = elapsedDay
         self.value = value
@@ -16,14 +35,16 @@ public struct MMHeatmapData {
 }
 
 public class MMHeatmapStyle:ObservableObject{
-    public init(baseCellColor:UIColor,minCellColor:UIColor = UIColor.secondarySystemBackground,week:[String] = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],dateMMFormat:String = "MMM") {
+    public init(baseCellColor:UIColor,minCellColor:UIColor = UIColor.secondarySystemBackground,week:[String] = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],dateMMFormat:String = "MMM",clippedWithEndDate:Bool = true) {
         self.minCellColor = minCellColor
         self.baseCellColor = baseCellColor
         self.week = week
         self.dateMMFormat = dateMMFormat
+        self.clippedWithEndDate = clippedWithEndDate
     }
     @Published public var minCellColor:UIColor
     @Published public var baseCellColor:UIColor
+    let clippedWithEndDate:Bool
    public let week:[String]
     public let dateMMFormat:String
 }

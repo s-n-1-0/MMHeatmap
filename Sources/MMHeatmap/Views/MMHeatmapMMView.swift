@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct MMHeatmapMMView: View {
-    init(yyyy:Int,startMM:Int,MM:Int,data:[MMHeatmapData],maxValue:Int,maxElapsedDay:Int?) {
+    init(yyyy:Int,startMM:Int,MM:Int,data:[MMHeatmapElapsedData],maxValue:Int,maxElapsedDay:Int?) {
         //指定した月の最終日を取得
         let calendar = Calendar(identifier: .gregorian)
         var comp = DateComponents()
@@ -35,7 +35,7 @@ struct MMHeatmapMMView: View {
     let calendar:Calendar
     let yyyy:Int
     let MM:Int
-    let data:[MMHeatmapData]
+    let data:[MMHeatmapElapsedData]
     let startDate:Date
     let lastDay:Int
     let maxWeeks:Int
@@ -105,8 +105,8 @@ struct MMHeatmapMMView: View {
 struct MMHeatmapMMView_Previews: PreviewProvider {
     static var previews: some View {
         MMHeatmapMMView(yyyy: 2021, startMM: 2, MM: 2,data:[
-        MMHeatmapData(elapsedDay: 0, value: 5),
-        MMHeatmapData(elapsedDay: 1, value: 7)
+        MMHeatmapElapsedData(elapsedDay: 0, value: 5),
+        MMHeatmapElapsedData(elapsedDay: 1, value: 7)
         ], maxValue: 10,maxElapsedDay: 5).environmentObject(MMHeatmapStyle(baseCellColor: UIColor.black))
     }
 }

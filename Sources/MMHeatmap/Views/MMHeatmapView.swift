@@ -9,15 +9,27 @@
 import SwiftUI
 
 public struct MMHeatmapView: View {
-    public init(yyyy:Int,MM:Int,data:[MMHeatmapData],range:Int,style:MMHeatmapStyle = MMHeatmapStyle(baseCellColor: UIColor.label),maxElapsedDay:Int? = nil) {
+    public init(start _start:Date,end _end:Date? = nil,data:[MMHeatmapData],style:MMHeatmapStyle = MMHeatmapStyle(baseCellColor: .label)){
+        let cal = Calendar(identifier: .gregorian)
+        let start = _start.truncate([.year,.month])
+        let startYmd = start.getYmdhms()!
+        let end = (_end != nil) ? _end!.truncateHms() : Date().truncateHms()
         let formatter = DateFormatter()
         formatter.dateFormat = style.dateMMFormat
         self.displayFormatter = formatter
-        self.yyyy = yyyy
-        self.MM = MM
-        self.data = data
-        self.range = range
-        self.maxElapsedDay = maxElapsedDay
+        self.yyyy = startYmd.year
+        self.MM = startYmd.month
+        self.data = data.compactMap{
+                item in
+            if let elapsedDay = cal.dateComponents([.day],from:start,to:item.date).day{
+                return MMHeatmapElapsedData(elapsedDay: elapsedDay, value: item.value)
+            }else{
+                return nil
+            }
+        }
+        //x月1日基準で差を求める
+        self.range = cal.dateComponents([.month], from: start.truncate([.year,.month]),to:end.truncate([.year,.month])).month! + 1
+        self.maxElapsedDay = style.clippedWithEndDate ?  Calendar(identifier: .gregorian).dateComponents([.day],from:start,to:end).day: nil
         self.maxValue = data.max(by:{
             (a, b) -> Bool in
             a.value < b.value
@@ -29,7 +41,7 @@ public struct MMHeatmapView: View {
     let displayFormatter:DateFormatter
     let yyyy:Int
     let MM:Int
-    let data:[MMHeatmapData]
+    let data:[MMHeatmapElapsedData]
     let range:Int
     let maxValue:Int
     let maxElapsedDay:Int?
@@ -67,6 +79,6 @@ public struct MMHeatmapView: View {
 }
 struct MMHeatmap_Previews: PreviewProvider {
     static var previews: some View {
-        MMHeatmapView(yyyy: 2021,MM:4, data: [MMHeatmapData(elapsedDay: 15, value: 10)], range: 3,style: MMHeatmapStyle(baseCellColor: UIColor.systemIndigo))
+        MMHeatmapView(start: Calendar(identifier: .gregorian).date(from: DateComponents(year:2022,month: 2,day: 15))!, data: [MMHeatmapData(year: 2022, month: 4, day:1, value: 10)], style: MMHeatmapStyle(baseCellColor: UIColor.systemIndigo))
     }
 }
