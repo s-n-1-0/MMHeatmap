@@ -11,6 +11,15 @@ import SwiftUI
  Input data
  */
 public struct MMHeatmapData {
+    public init(date _date:Date,value:Int){
+        let date = _date.truncateHms()
+        let comps = date.getYmdhms()!
+        self.year = comps.year
+        self.month = comps.month
+        self.day = comps.day
+        self.date = date
+        self.value = value
+    }
     public init(year:Int,month:Int,day:Int,value:Int){
         self.year = year
         self.month = month
