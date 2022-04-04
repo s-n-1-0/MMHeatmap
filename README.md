@@ -11,31 +11,29 @@ Heatmap style calendar made in SwiftUI.
 
 
 ## MMHeatmapView
-
+Displays a calendar from "start" to "end".
 ```swift
 //"import  MMHeatmap" is required
-MMHeatmapView(yyyy: 2021,MM:4, data: [MMHeatmapData(elapsedDay: 15, value: 10)], range: 3,style: MMHeatmapStyle(baseCellColor: UIColor.systemIndigo))
+let start = Calendar(identifier: .gregorian).date(from: DateComponents(year:2021,month: 12,day: 20))!
+let end = Calendar(identifier: .gregorian).date(from: DateComponents(year:2022,month: 4,day: 3))! // or nil = now
+
+MMHeatmapView(start: start,end:end, data: [MMHeatmapData(year: 2022, month: 4, day:1, value: 10)], style: MMHeatmapStyle(baseCellColor: UIColor.systemIndigo,isScroll: true))
 ```
-*It will be displayed for three months starting from April, i.e. until June.  
 *The variable "style:" is optional.  
 <br>
 ## MMHeatmapViewData
-#### ・**elapsedDay:**  
-Specify the number of days elapsed based on MM.  
-<br>
-*Example: MM = 4*   
-* `elapsedDay:0 = April 1`  
-* `elapsedDay:30 = May 1`  
-Note that it starts with 0.  
-<br>
+Calendar cell data.  
+Please not duplicate dates in MMHeatmapViewData.
+#### **(year,month,day) or date**
 
-"elapsedDay" can be obtained in the following way.
 ```swift
-//startDate:Date = 4/1/2021
-elapsedDay = Calendar(identifier: .gregorian).dateComponents([.day],from:startDate,to:date).day
+public init(date _date:Date,value:Int)
+```
+```swift
+public init(year:Int,month:Int,day:Int,value:Int)
 ```
 
-#### ・**value:**
+#### **value:**
 Specifies the color strength of the cell.  
 Specify a value greater than or equal to 0.  
 *If you want to set Color.clear, use "nil".
@@ -46,6 +44,11 @@ Specify a value greater than or equal to 0.
 | baseCellColor | Maximum color                                                                  |     | 
 | minCellColor  | Color when value is 0                                                          |     | 
 | week          | Notation of the day of the week                                                |     | 
-| dateMMFormat  | Months format<br>Example: 4<br>"M" = 4<br>"MM" = 04<br>"MMM" = en: Apr , ja: 4月 |     | 
-<br>
-If you want to add a style, please suggest it in "GitHub Issues".
+| dateMMFormat  | Months format<br>Example: 4<br>"M" = 4<br>"MM" = 04<br>"MMM" = en: Apr , ja: 4月 |     |
+|clippedWithEndDate|**true** : If you want to display cells up to end parameter.<br>**false** : if you want to display cells until the end of the month in the last month.|
+|isScroll|scrolling.<br>*Disabled for iOS13|
+
+---
+
+### PR / Issues
+Please PR or Issues if you have any questions.
