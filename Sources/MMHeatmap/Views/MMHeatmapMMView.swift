@@ -45,38 +45,38 @@ struct MMHeatmapMMView: View {
         HStack(spacing:2){
             //表示月
             ForEach(0..<maxWeeks){ w in
-              let values = GetWeekOfMonthDataValues(weekOfMonth: w + 1)
+              let values = getWeekOfMonthDataValues(weekOfMonth: w + 1)
                 //1基準
-            let Idx = CheckIndex(w: w)
+            let Idx = investigateWeekIndex(w: w)
                 MMHeatmapColumnView(startIdx: Idx.startIdx, endIdx: Idx.endIdx, values: values, maxValue: maxValue)
             }
         }
     }
-    func GetComponents(dd:Int?) -> DateComponents{
+    func makeDateComponents(dd:Int?) -> DateComponents{
         var comp = DateComponents()
         comp.year = yyyy
         comp.month = MM
         comp.day = dd
         return comp
     }
-    func CheckIndex(w:Int)->(startIdx:Int,endIdx:Int){
+    func investigateWeekIndex(w:Int)->(startIdx:Int,endIdx:Int){
         if(w == 0){
-            let start = GetWeekday(dd: 1)
+            let start = getWeekday(dd: 1)
          return (start,6)
         }else if (w == (maxWeeks - 1)){
-            let end = GetWeekday(dd: lastDay)
+            let end = getWeekday(dd: lastDay)
             return (0,end)
         }else{
             return (0,6)
         }
     }
     //0-6
-    func GetWeekday(dd:Int)->Int{
-        let date = calendar.date(from: GetComponents(dd: dd))!
+    func getWeekday(dd:Int)->Int{
+        let date = calendar.date(from: makeDateComponents(dd: dd))!
         return calendar.component(.weekday, from: date) - 1
     }
     //絶対に7つ返る 日月火水木金土
-    func GetWeekOfMonthDataValues(weekOfMonth:Int)->[Int?]{
+    func getWeekOfMonthDataValues(weekOfMonth:Int)->[Int?]{
         var values:[Int?] = []
         var seComp = DateComponents()
         seComp.year = yyyy

@@ -59,7 +59,7 @@ public struct MMHeatmapView: View {
                 ForEach( MM ..< (MM + range)){
                     i in
                     VStack{
-                        Text(GetMMTitle(MM: i)).font(.footnote)
+                        Text(getMMLabel(MM: i)).font(.footnote)
                         MMHeatmapMMView(yyyy: yyyy, startMM: MM, MM: i,data:data, maxValue: maxValue,maxElapsedDay:maxElapsedDay)
                     }.frame(alignment:.bottom).id("MMHeatmapView:\(i)")
                     if(i != (MM + range - 1)){
@@ -71,7 +71,7 @@ public struct MMHeatmapView: View {
         }.frame(alignment:.leading).environmentObject(style)
     }
 
-    func GetMMTitle(MM:Int)->String{
+    func getMMLabel(MM:Int)->String{
         var comp = DateComponents()
         comp.year = yyyy
         comp.day = 1
@@ -98,14 +98,14 @@ public struct MMHeatmapView: View {
                     }
                 }
             }else{
-                content.modifier(NotScroll())
+                content.modifier(DisabledScroll())
             }
         }else{
-             content.modifier(NotScroll())
+             content.modifier(DisabledScroll())
         }
     }
 }
-fileprivate struct NotScroll:ViewModifier{
+fileprivate struct DisabledScroll:ViewModifier{
     @State private var totalHeight = CGFloat(100)
     func body(content: Content) -> some View {
         GeometryReader{ //ここの高さは実行時に修正されます。
