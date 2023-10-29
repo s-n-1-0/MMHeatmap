@@ -37,6 +37,7 @@ public struct MMHeatmapView: View {
         self.style = style
     }
     @ObservedObject var style:MMHeatmapStyle
+    @ObservedObject var layout = MMHeatmapLayout()
     let calendar = Calendar( identifier: .gregorian)
     let displayFormatter:DateFormatter
     let yyyy:Int
@@ -54,7 +55,7 @@ public struct MMHeatmapView: View {
                 Text(style.week[3]).font(.footnote)
                 Spacer()
                 Text(style.week[6]).font(.footnote).foregroundColor(Color(UIColor.systemBlue))
-            }.frame(height: 10*7 + 2*6)
+            }.frame(height: layout.columnHeight)
             HStack(alignment:.bottom){
                 ForEach( MM ..< (MM + range)){
                     i in
@@ -68,7 +69,7 @@ public struct MMHeatmapView: View {
                 }
             }.modifier(Scroll14(isScroll:style.isScroll,idx:MM + range - 1))
         }
-        }.frame(alignment:.leading).environmentObject(style)
+        }.frame(alignment:.leading).environmentObject(style).environmentObject(layout)
     }
 
     func getMMLabel(MM:Int)->String{
@@ -106,7 +107,7 @@ public struct MMHeatmapView: View {
     }
 }
 fileprivate struct DisabledScroll:ViewModifier{
-    @State private var totalHeight = CGFloat(100)
+    @EnvironmentObject var layout:MMHeatmapLayout
     func body(content: Content) -> some View {
         GeometryReader{ //ここの高さは実行時に修正されます。
             gp in
@@ -115,14 +116,8 @@ fileprivate struct DisabledScroll:ViewModifier{
                 content
                 Spacer() // for frameWidth > contentWidth
                 }.frame(maxWidth:gp.size.width,alignment: .trailing).clipped()
-            }.background(GeometryReader{
-                gp2->Color in
-                DispatchQueue.main.async {
-                    self.totalHeight = gp2.size.height
-                }
-                return Color.clear
-            })
-        }.frame(height:totalHeight)
+            }
+        }.frame(height:layout.mmHeatmapViewHeight)
     }
 }
 struct MMHeatmap_Previews: PreviewProvider {
@@ -130,11 +125,11 @@ struct MMHeatmap_Previews: PreviewProvider {
         VStack{
         //scroll
             MMHeatmapView(start: Calendar(identifier: .gregorian).date(from: DateComponents(year:2021,month: 12,day: 20))!,end:Calendar(identifier: .gregorian).date(from: DateComponents(year:2022,month: 4,day: 3))!, data: [MMHeatmapData(year: 2022, month: 4, day:1, value: 10)], style: MMHeatmapStyle(baseCellColor: UIColor.systemIndigo,isScroll: true))
-        //not scroll
+        //disable scroll
             MMHeatmapView(start: Calendar(identifier: .gregorian).date(from: DateComponents(year:2021,month: 12,day: 20))!,end:Calendar(identifier: .gregorian).date(from: DateComponents(year:2022,month: 4,day: 3))!, data: [MMHeatmapData(year: 2022, month: 4, day:1, value: 10)], style: MMHeatmapStyle(baseCellColor: UIColor.systemIndigo,isScroll: false))
         //scroll (for frameWidth < contentWidth)
             MMHeatmapView(start: Calendar(identifier: .gregorian).date(from: DateComponents(year:2022,month: 3,day: 20))!,end:Calendar(identifier: .gregorian).date(from: DateComponents(year:2022,month: 4,day: 3))!, data: [MMHeatmapData(year: 2022, month: 4, day:1, value: 10)], style: MMHeatmapStyle(baseCellColor: UIColor.systemIndigo,isScroll: true))
-        //not scroll (for frameWidth < contentWidth)
+        //disable scroll (for frameWidth < contentWidth)
             MMHeatmapView(start: Calendar(identifier: .gregorian).date(from: DateComponents(year:2022,month: 3,day: 20))!,end:Calendar(identifier: .gregorian).date(from: DateComponents(year:2022,month: 4,day: 3))!, data: [MMHeatmapData(year: 2022, month: 4, day:1, value: 10)], style: MMHeatmapStyle(baseCellColor: UIColor.systemIndigo,isScroll: false))
         }
     }

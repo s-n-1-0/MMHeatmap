@@ -107,6 +107,6 @@ struct MMHeatmapMMView_Previews: PreviewProvider {
         MMHeatmapMMView(yyyy: 2021, startMM: 2, MM: 2,data:[
         MMHeatmapElapsedData(elapsedDay: 0, value: 5),
         MMHeatmapElapsedData(elapsedDay: 1, value: 7)
-        ], maxValue: 10,maxElapsedDay: 5).environmentObject(MMHeatmapStyle(baseCellColor: UIColor.black))
+        ], maxValue: 10,maxElapsedDay: 20).environmentObject(MMHeatmapStyle(baseCellColor: UIColor.black)).environmentObject(MMHeatmapLayout())
     }
 }

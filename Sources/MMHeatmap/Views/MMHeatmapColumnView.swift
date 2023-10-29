@@ -15,15 +15,15 @@ struct MMHeatmapColumnView:View {
         self.maxValue = maxValue
     }
     @EnvironmentObject var style:MMHeatmapStyle
-    
+    @EnvironmentObject var layout:MMHeatmapLayout
     let start:Int
     let end:Int
     let values:[Int?]
     let maxValue:Int
     var body: some View{
-        VStack(spacing:2){
+        VStack(spacing:layout.cellSpacing){
             ForEach(0..<7){ i in
-                RoundedRectangle(cornerRadius: 2).frame(width: 10,height: 10).modifier(CellColorModifier(isRange: (i >= start && i <= end ) , value: values[i], maxValue: maxValue,minColor: style.minCellColor,baseColor: style.baseCellColor))
+                RoundedRectangle(cornerRadius: 2).frame(width: layout.cellSize,height: layout.cellSize).modifier(CellColorModifier(isRange: (i >= start && i <= end ) , value: values[i], maxValue: maxValue,minColor: style.minCellColor,baseColor: style.baseCellColor))
             }
         }
     }
@@ -32,20 +32,20 @@ fileprivate struct CellColorModifier:ViewModifier {
     init(isRange:Bool,value:Int?,maxValue:Int,minColor:UIColor,baseColor:UIColor) {
         self.isRange = isRange
         if let v = value{
-        let pct:CGFloat = CGFloat(v) / CGFloat(maxValue)
+            let pct:CGFloat = CGFloat(v) / CGFloat(maxValue)
             var secondHue:CGFloat = 0
             var secondSaturation:CGFloat = 0
             var secondBrightness:CGFloat = 0
             var secondAlpa:CGFloat = 0
-        minColor.getHue(&secondHue, saturation: &secondSaturation, brightness: &secondBrightness, alpha: &secondAlpa)
-        var hue:CGFloat = 0
-        var saturation:CGFloat = 0
-        var brightness:CGFloat = 0
-        var alpha:CGFloat = 0
-        baseColor.getHue(&hue, saturation: &saturation, brightness: &brightness, alpha: &alpha)
-        saturation = (saturation - secondSaturation) * pct + secondSaturation
-        brightness = (brightness - secondBrightness) * pct + secondBrightness
-        self.rangeColor = Color(UIColor(hue: hue, saturation: saturation, brightness: brightness, alpha: alpha))
+            minColor.getHue(&secondHue, saturation: &secondSaturation, brightness: &secondBrightness, alpha: &secondAlpa)
+            var hue:CGFloat = 0
+            var saturation:CGFloat = 0
+            var brightness:CGFloat = 0
+            var alpha:CGFloat = 0
+            baseColor.getHue(&hue, saturation: &saturation, brightness: &brightness, alpha: &alpha)
+            saturation = (saturation - secondSaturation) * pct + secondSaturation
+            brightness = (brightness - secondBrightness) * pct + secondBrightness
+            self.rangeColor = Color(UIColor(hue: hue, saturation: saturation, brightness: brightness, alpha: alpha))
         }else{
             self.rangeColor = Color(UIColor.clear)
         }
@@ -54,11 +54,11 @@ fileprivate struct CellColorModifier:ViewModifier {
     let rangeColor:Color
     func body(content: Content) -> some View {
         Group{
-        if(isRange){
-            content.foregroundColor(rangeColor)
-        }else{
-            content.foregroundColor(Color.clear)
-        }
+            if(isRange){
+                content.foregroundColor(rangeColor)
+            }else{
+                content.foregroundColor(Color.clear)
+            }
         }
     }
 }
@@ -66,5 +66,6 @@ fileprivate struct CellColorModifier:ViewModifier {
 struct MMHeatmapColumnView_Previews: PreviewProvider {
     static var previews: some View {
         MMHeatmapColumnView(startIdx: 0, endIdx: 6,values: [Int](repeating: 0, count: 7), maxValue: 10).environmentObject(MMHeatmapStyle(baseCellColor: UIColor.black))//0-6
+            .environmentObject(MMHeatmapLayout())
     }
 }
