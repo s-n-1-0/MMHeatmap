@@ -50,5 +50,9 @@ Specify a value greater than or equal to 0.
 
 ---
 
+### Use in Widget Extension
+
+Read this. https://github.com/s-n-1-0/MMHeatmap/issues/2
+
 ### PR / Issues
 Please PR or Issues if you have any questions.
