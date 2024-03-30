@@ -1,13 +1,12 @@
 //
-//  MMHeatmapColumnView.swift
-//  Diarrrrrrrrrry
+//  MMHeatmapWeekView.swift
 //
 //  Created by Mac10 on 2021/04/13.
 //  Copyright © 2021 s-n-1-0. All rights reserved.
 //
 
 import SwiftUI
-struct MMHeatmapColumnView:View {
+struct MMHeatmapWeekView:View {
     init(startIdx:Int,endIdx:Int,values:[Int?],maxValue:Int) {
         start = startIdx
         end = endIdx
@@ -63,9 +62,7 @@ fileprivate struct CellColorModifier:ViewModifier {
     }
 }
 
-struct MMHeatmapColumnView_Previews: PreviewProvider {
-    static var previews: some View {
-        MMHeatmapColumnView(startIdx: 0, endIdx: 6,values: [Int](repeating: 0, count: 7), maxValue: 10).environmentObject(MMHeatmapStyle(baseCellColor: UIColor.black))//0-6
-            .environmentObject(MMHeatmapLayout())
-    }
+#Preview{
+    MMHeatmapWeekView(startIdx: 0, endIdx: 6,values: [Int](repeating: 0, count: 7), maxValue: 10).environmentObject(MMHeatmapStyle(baseCellColor: UIColor.black))//0-6
+        .environmentObject(MMHeatmapLayout())
 }
