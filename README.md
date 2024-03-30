@@ -14,10 +14,20 @@ Heatmap style calendar made in SwiftUI.
 Displays a calendar from "start" to "end".
 ```swift
 //"import  MMHeatmap" is required
-let start = Calendar(identifier: .gregorian).date(from: DateComponents(year:2021,month: 12,day: 20))!
-let end = Calendar(identifier: .gregorian).date(from: DateComponents(year:2022,month: 4,day: 3))! // or nil = now
 
-MMHeatmapView(start: start,end:end, data: [MMHeatmapData(year: 2022, month: 4, day:1, value: 10)], style: MMHeatmapStyle(baseCellColor: UIColor.systemIndigo,isScroll: true))
+let calendar = Calendar(identifier: .gregorian)
+let start = calendar.date(from: DateComponents(year:2021,month: 12,day: 20))!
+let end = calendar.date(from: DateComponents(year:2022,month: 4,day: 3))! // or nil = now
+let data = [
+    MMHeatmapData(year: 2022, month: 3, day: 10, value: 5),
+    MMHeatmapData(year: 2022, month: 4, day:1, value: 10)
+]
+
+//view
+HStack{
+    MMHeatmapView(start: start,end:end, data: data, style: MMHeatmapStyle(baseCellColor: UIColor.systemIndigo,isScroll: true))
+    Spacer()
+}
 ```
 *The variable "style:" is optional.  
 <br>
