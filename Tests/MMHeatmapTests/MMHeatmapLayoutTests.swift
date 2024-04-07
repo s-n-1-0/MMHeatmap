@@ -15,6 +15,14 @@ final class MMHeatmapLayoutTests: XCTestCase {
         XCTAssertEqual(width,58) // <- (weeks * cellsize) + (weeks-1) * cellspacing
     }
     
+    func testMMHeatmapMonthViewHeight(){
+        let cellSize = 20.240963855421687
+        let layout = MMHeatmapLayout(cellSize: cellSize)
+        XCTAssertEqual(layout.backwardCellSize(viewHeight: 200), cellSize)
+        
+        XCTAssertEqual(layout.mmHeatmapViewHeight,200)
+    }
+    
     func testMMHeatmapViewContentWidth(){
         // short case
         let layout = MMHeatmapLayout()

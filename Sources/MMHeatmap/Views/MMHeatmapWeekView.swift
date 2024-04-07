@@ -22,7 +22,7 @@ struct MMHeatmapWeekView:View {
     var body: some View{
         VStack(spacing:layout.cellSpacing){
             ForEach(0..<7){ i in
-                RoundedRectangle(cornerRadius: 2).frame(width: layout.cellSize,height: layout.cellSize).modifier(CellColorModifier(isRange: (i >= start && i <= end ) , value: values[i], maxValue: maxValue,minColor: style.minCellColor,baseColor: style.baseCellColor))
+                RoundedRectangle(cornerRadius: layout.cellSize * 0.2).frame(width: layout.cellSize,height: layout.cellSize).modifier(CellColorModifier(isRange: (i >= start && i <= end ) , value: values[i], maxValue: maxValue,minColor: style.minCellColor,baseColor: style.baseCellColor))
             }
         }
     }

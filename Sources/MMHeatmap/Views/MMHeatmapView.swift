@@ -9,7 +9,12 @@
 import SwiftUI
 
 public struct MMHeatmapView: View {
-    public init(start _start:Date,end _end:Date? = nil,data:[MMHeatmapData],style:MMHeatmapStyle = MMHeatmapStyle(baseCellColor: .label)){
+    public init(start _start:Date,
+                end _end:Date? = nil,
+                data:[MMHeatmapData],
+                style:MMHeatmapStyle = MMHeatmapStyle(baseCellColor: .label),
+                layout:MMHeatmapLayout = MMHeatmapLayout()
+    ){
         let cal = Calendar(identifier: .gregorian)
         let start = _start.truncate([.year,.month])
         let startYmd = start.getYmdhms()!
@@ -37,9 +42,10 @@ public struct MMHeatmapView: View {
             a.value < b.value
         })?.value ?? 10
         self.style = style
+        self._layout = ObservedObject(initialValue: layout)
     }
     @ObservedObject var style:MMHeatmapStyle
-    @ObservedObject var layout = MMHeatmapLayout()
+    @ObservedObject var layout:MMHeatmapLayout
     let calendar = Calendar( identifier: .gregorian)
     let displayFormatter:DateFormatter
     let start:Date
@@ -53,17 +59,22 @@ public struct MMHeatmapView: View {
     public var body: some View {
         HStack(alignment:.bottom){
             VStack{
-                Text(style.week[0]).font(.footnote).foregroundColor(Color(UIColor.systemRed))
+                Text(style.week[0])
+                    .font(.system(size: layout.mmLabelHeight))
+                    .foregroundColor(Color(UIColor.systemRed))
                 Spacer()
-                Text(style.week[3]).font(.footnote)
+                Text(style.week[3]).font(.system(size: layout.mmLabelHeight))
                 Spacer()
-                Text(style.week[6]).font(.footnote).foregroundColor(Color(UIColor.systemBlue))
+                Text(style.week[6])
+                    .font(.system(size: layout.mmLabelHeight))
+                    .foregroundColor(Color(UIColor.systemBlue))
             }.frame(height: layout.columnHeight).layoutPriority(1)
             HStack(alignment:.bottom,spacing: 0){
                 ForEach( MM ..< (MM + range),id:\.self){
                     i in
-                    VStack{
-                        Text(getMMLabel(MM: i)).font(.footnote).fixedSize(horizontal: true, vertical: false)
+                    VStack(spacing:0){
+                        Text(getMMLabel(MM: i)).font(.system(size: layout.mmLabelHeight)) // actual pixel size: -4 //why???
+                            .fixedSize(horizontal: true, vertical: false).padding([.top,.bottom],layout.mmLabelVSpacing)
                         MMHeatmapMonthView(yyyy: yyyy, startMM: MM, MM: i,data:data, maxValue: maxValue,maxElapsedDay:maxElapsedDay)
                     }.frame(alignment:.bottom).id("MMHeatmapView:\(i)")
                     if(i != (MM + range - 1)){
@@ -90,9 +101,10 @@ fileprivate struct Scroll14:ViewModifier{
     let isScroll:Bool
     let innerContentWidth:CGFloat
     let idx:Int
+    @EnvironmentObject var layout:MMHeatmapLayout
     @ViewBuilder func body(content: Content) -> some View {
-        if #available(iOS 14.0, *){
-            if isScroll{
+        Group{
+            if #available(iOS 14.0, *),isScroll{
                 ScrollView(.horizontal){
                     ScrollViewReader{
                         proxy in
@@ -100,13 +112,11 @@ fileprivate struct Scroll14:ViewModifier{
                             proxy.scrollTo("MMHeatmapView:\(idx)", anchor: .trailing)
                         }
                     }
-                }.frame(maxWidth:innerContentWidth)
+                }
             }else{
                 content.modifier(DisabledScroll(innerContentWidth: innerContentWidth))
             }
-        }else{
-            content.modifier(DisabledScroll(innerContentWidth: innerContentWidth))
-        }
+        }.frame(maxWidth:innerContentWidth)
     }
 }
 fileprivate struct DisabledScroll:ViewModifier{
@@ -116,7 +126,7 @@ fileprivate struct DisabledScroll:ViewModifier{
         GeometryReader{
             gp in
             content.frame(width:gp.size.width < innerContentWidth ? gp.size.width : innerContentWidth,height:layout.mmHeatmapViewHeight,alignment: .trailing).clipped()
-        }.frame(height:layout.mmHeatmapViewHeight).frame(maxWidth:innerContentWidth)
+        }.frame(height:layout.mmHeatmapViewHeight)
     }
 }
 
@@ -124,7 +134,7 @@ fileprivate struct DisabledScroll:ViewModifier{
     let calendar = Calendar(identifier: .gregorian)
     return VStack{
         //scroll
-        MMHeatmapView(start: calendar.date(from: DateComponents(year:2021,month: 10,day: 20))!,
+        MMHeatmapView(start: calendar.date(from: DateComponents(year:2021,month: 4,day: 20))!,
                       end:calendar.date(from: DateComponents(year:2022,month: 4,day: 3))!,
                       data: [MMHeatmapData(year: 2022, month: 4, day:1, value: 10)],
                       style: MMHeatmapStyle(baseCellColor: UIColor.systemIndigo,isScroll: true)).background(Color.green)
@@ -138,7 +148,10 @@ fileprivate struct DisabledScroll:ViewModifier{
             MMHeatmapView(start: calendar.date(from: DateComponents(year:2022,month: 3,day: 20))!,
                           end:Calendar(identifier: .gregorian).date(from: DateComponents(year:2022,month: 4,day: 3))!,
                           data: [MMHeatmapData(year: 2022, month: 4, day:1, value: 10)],
-                          style: MMHeatmapStyle(baseCellColor: UIColor.systemIndigo,isScroll: true)).background(Color.green)
+                          style: MMHeatmapStyle(baseCellColor: UIColor.systemIndigo,
+                          isScroll: true),
+                          layout: MMHeatmapLayout(cellSize: 20)
+            ).background(Color.green)
             Spacer()
         }
         //disable scroll (for frameWidth < contentWidth)
@@ -146,7 +159,9 @@ fileprivate struct DisabledScroll:ViewModifier{
             MMHeatmapView(start: calendar.date(from: DateComponents(year:2022,month: 3,day: 20))!,
                           end:calendar.date(from: DateComponents(year:2022,month: 4,day: 3))!,
                           data: [MMHeatmapData(year: 2022, month: 4, day:1, value: 10)],
-                          style: MMHeatmapStyle(baseCellColor: UIColor.systemIndigo,isScroll: false)).background(Color.green)
+                          style: MMHeatmapStyle(baseCellColor: UIColor.systemIndigo,isScroll: false),
+                          layout: MMHeatmapLayout(cellSize: 20)
+            ).background(Color.green)
             Spacer()
         }
     }

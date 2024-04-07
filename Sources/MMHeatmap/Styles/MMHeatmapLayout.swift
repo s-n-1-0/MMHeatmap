@@ -6,11 +6,20 @@
 //
 
 import SwiftUI
-class MMHeatmapLayout:ObservableObject{
-    let cellSize:CGFloat = 10
+public class MMHeatmapLayout:ObservableObject{
+    public init(cellSize:CGFloat = 10){
+        self.cellSize = cellSize
+    }
+    let cellSize:CGFloat
     let cellSpacing:CGFloat = 2
-    let mmLabelHeight:CGFloat = 20
+    let diff:CGFloat = 4 //diff from actual value, why??
     let mmLabelVSpacing:CGFloat = 8
+    
+    var mmLabelHeight:CGFloat{
+        get{
+            cellSize * 1.3
+        }
+    }
     var columnHeight:CGFloat{
         get{
             cellSize * 7 + cellSpacing * 6
@@ -19,7 +28,7 @@ class MMHeatmapLayout:ObservableObject{
     
     var mmHeatmapViewHeight:CGFloat{
         get{
-            columnHeight + mmLabelHeight + mmLabelVSpacing
+            columnHeight + mmLabelHeight + diff + mmLabelVSpacing*2
         }
     }
     
@@ -48,5 +57,10 @@ class MMHeatmapLayout:ObservableObject{
             + (i < months.count - 1 ?  dividerWidth: 0)
         }.reduce(0, +)
         return sumWidth
+    }
+    public func backwardCellSize(viewHeight:CGFloat)->CGFloat{
+        let l = MMHeatmapLayout()
+        let contentHeight = viewHeight - l.mmLabelVSpacing * 2 - l.cellSpacing * 6 - l.diff
+        return contentHeight / 8.3 //<- 7 + 1.3
     }
 }
