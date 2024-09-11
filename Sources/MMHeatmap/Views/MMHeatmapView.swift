@@ -11,7 +11,7 @@ import SwiftUI
 public struct MMHeatmapView: View {
     public init(start _start:Date,
                 end _end:Date? = nil,
-                data:[MMHeatmapData],
+                data _data:[MMHeatmapData],
                 style:MMHeatmapStyle = MMHeatmapStyle(baseCellColor: .label),
                 layout:MMHeatmapLayout = MMHeatmapLayout()
     ){
@@ -21,6 +21,7 @@ public struct MMHeatmapView: View {
         let end = (_end != nil) ? _end!.truncateHms() : Date().truncateHms()
         let formatter = DateFormatter()
         formatter.dateFormat = style.dateMMFormat
+        let data = _data.dateRange(start: start, end: end)
         self.displayFormatter = formatter
         self.start = start
         self.end = end
