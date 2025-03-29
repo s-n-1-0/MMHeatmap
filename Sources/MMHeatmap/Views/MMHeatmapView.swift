@@ -98,6 +98,7 @@ public struct MMHeatmapView: View {
         }
     }
 }
+
 fileprivate struct Scroll14:ViewModifier{
     let isScroll:Bool
     let innerContentWidth:CGFloat
@@ -120,6 +121,7 @@ fileprivate struct Scroll14:ViewModifier{
         }.frame(maxWidth:innerContentWidth)
     }
 }
+
 fileprivate struct DisabledScroll:ViewModifier{
     let innerContentWidth:CGFloat
     @EnvironmentObject var layout:MMHeatmapLayout
@@ -139,22 +141,25 @@ fileprivate struct DisabledScroll:ViewModifier{
                       end:calendar.date(from: DateComponents(year:2022,month: 4,day: 3))!,
                       data: [MMHeatmapData(year: 2022, month: 4, day:1, value: 10)],
                       style: MMHeatmapStyle(baseCellColor: UIColor.systemIndigo,isScroll: true)).background(Color.green)
+        
         //disable scroll
         MMHeatmapView(start: calendar.date(from: DateComponents(year:2021,month: 4,day: 20))!,
                       end:calendar.date(from: DateComponents(year:2022,month: 4,day: 3))!,
                       data: [MMHeatmapData(year: 2022, month: 4, day:1, value: 10)],
                       style: MMHeatmapStyle(baseCellColor: UIColor.systemIndigo,isScroll: false)).background(Color.green)
+        
         //scroll (for frameWidth < contentWidth)
         HStack{
             MMHeatmapView(start: calendar.date(from: DateComponents(year:2022,month: 3,day: 20))!,
                           end:Calendar(identifier: .gregorian).date(from: DateComponents(year:2022,month: 4,day: 3))!,
                           data: [MMHeatmapData(year: 2022, month: 4, day:1, value: 10)],
                           style: MMHeatmapStyle(baseCellColor: UIColor.systemIndigo,
-                          isScroll: true),
+                                                isScroll: true),
                           layout: MMHeatmapLayout(cellSize: 20)
             ).background(Color.green)
             Spacer()
         }
+        
         //disable scroll (for frameWidth < contentWidth)
         HStack{
             MMHeatmapView(start: calendar.date(from: DateComponents(year:2022,month: 3,day: 20))!,
