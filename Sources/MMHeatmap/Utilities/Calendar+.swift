@@ -14,6 +14,7 @@ extension Calendar{
      */
     func lastDateOfMonth(year:Int,month:Int)->Date{
         var comp = DateComponents()
+        comp.year = year
         comp.month = month + 1
         comp.day = 0
         // 0 = 前の月の最終日
