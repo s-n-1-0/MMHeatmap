@@ -82,7 +82,7 @@ struct MMHeatmapMonthView: View {
             seComp.weekday = weekday
             if let date = calendar.date(from: seComp) {
                 let elapsed = calendar.dateComponents([.day], from:startDate,to:date).day!
-                if maxElapsedDay == nil || maxElapsedDay! >= elapsed{
+                if let maxElapsedDay, elapsed <= maxElapsedDay{
                     if let value =  data.first(where: {$0.elapsedDay == elapsed})?.value{
                         values.append(value)
                     }else{
